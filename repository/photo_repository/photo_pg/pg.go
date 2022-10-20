@@ -1,7 +1,6 @@
 package photo_pg
 
 import (
-	"fmt"
 	"time"
 
 	"mygram/entity"
@@ -72,7 +71,6 @@ func (p *photoPG) EditPhotoData(photoID uint, photoPayload *entity.Photo) (*enti
 		}
 		return nil, errs.NewInternalServerErrorr("Something went wrong")
 	}
-	fmt.Println("Melihat photo", &photo)
 
 	return &photo, nil
 }

@@ -1,8 +1,41 @@
 definitions:
+  dto.DeletePhotoResponse:
+    properties:
+      message:
+        type: string
+    type: object
   dto.DeleteUserResponse:
     properties:
       message:
         type: string
+    type: object
+  dto.EmbeddedUserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  dto.GetPhotoResponse:
+    properties:
+      User:
+        $ref: '#/definitions/dto.EmbeddedUserResponse'
+      caption:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
     type: object
   dto.LoginRequest:
     properties:
@@ -15,6 +48,45 @@ definitions:
     properties:
       access_token:
         type: string
+    type: object
+  dto.PhotoRequest:
+    properties:
+      caption:
+        type: string
+      photo_url:
+        type: string
+      title:
+        type: string
+    type: object
+  dto.PhotoResponse:
+    properties:
+      caption:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  dto.PhotoUpdateResponse:
+    properties:
+      caption:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
     type: object
   dto.RegisterRequest:
     properties:
@@ -61,6 +133,130 @@ definitions:
 info:
   contact: {}
 paths:
+  /photos:
+    get:
+      consumes:
+      - application/json
+      description: Get All Photos based on token user
+      parameters:
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYyODU5MzYsImlkIjoyfQ.ahlQ3Icb2h72Aam9jWgZFM-TultwjKzymM7DGKHVVKU
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.GetPhotoResponse'
+            type: array
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+      tags:
+      - Photos
+    post:
+      consumes:
+      - application/json
+      description: Post Photo based on token user
+      parameters:
+      - description: User Request
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PhotoRequest'
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYyODU5MzYsImlkIjoyfQ.ahlQ3Icb2h72Aam9jWgZFM-TultwjKzymM7DGKHVVKU
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.PhotoResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+      tags:
+      - Photos
+  /photos/{photoID}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Photo based on token user with paramId of photoId
+      parameters:
+      - default: "2"
+        description: Photo ID
+        in: path
+        name: photoID
+        required: true
+        type: string
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYyODU5MzYsImlkIjoyfQ.ahlQ3Icb2h72Aam9jWgZFM-TultwjKzymM7DGKHVVKU
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DeletePhotoResponse'
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+      tags:
+      - Photos
+    put:
+      consumes:
+      - application/json
+      description: Update Photo based on token user with paramId of photoId
+      parameters:
+      - description: User Request
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.PhotoRequest'
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYyODU5MzYsImlkIjoyfQ.ahlQ3Icb2h72Aam9jWgZFM-TultwjKzymM7DGKHVVKU
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - default: "1"
+        description: Photo ID
+        in: path
+        name: photoID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/dto.PhotoUpdateResponse'
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+      tags:
+      - Photos
   /users:
     delete:
       consumes:
