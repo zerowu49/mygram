@@ -19,6 +19,17 @@ func NewCommentRestHandler(commentService service.CommentService) *commentRestHa
 	return &commentRestHandler{commentService: commentService}
 }
 
+// PostComment godoc
+// @Schemes http
+// @Tags Comment
+// @Description Create new comment
+// @Param        RequestBody   body      dto.CommentRequest  true  "User Request"
+// @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
+// @Accept json
+// @Produce json
+// @Success 201 {object} dto.CommentResponse
+// @Failure 400 {object} object
+// @Router /comments [post]
 func (c *commentRestHandler) PostComment(ctx *gin.Context) {
 	var commentRequest dto.CommentRequest
 	var err error
@@ -59,6 +70,16 @@ func (c *commentRestHandler) PostComment(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, comment)
 }
 
+// GetAllComments godoc
+// @Schemes http
+// @Tags Comment
+// @Description Get All comment by identify user from token
+// @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
+// @Accept json
+// @Produce json
+// @Success 200 {array} []dto.GetCommentResponse
+// @Failure 400 {object} object
+// @Router /comments [get]
 func (c *commentRestHandler) GetAllComments(ctx *gin.Context) {
 	var userData entity.User
 	if value, ok := ctx.MustGet("userData").(entity.User); !ok {
@@ -83,6 +104,18 @@ func (c *commentRestHandler) GetAllComments(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, comments)
 }
 
+// UpdateComment godoc
+// @Schemes http
+// @Tags Comment
+// @Description Update comment by identify user from token
+// @Param        RequestBody   body      dto.EditCommentRequest  true  "User Request"
+// @Param commentID path string true "Comment ID" default(1)
+// @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.EditCommentResponse
+// @Failure 400 {object} object
+// @Router /comments/{commentID} [put]
 func (c *commentRestHandler) UpdateComment(ctx *gin.Context) {
 	var commentRequest dto.EditCommentRequest
 	var userData entity.User
@@ -133,6 +166,17 @@ func (c *commentRestHandler) UpdateComment(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, comment)
 }
 
+// DeleteComment godoc
+// @Schemes http
+// @Tags Comment
+// @Description Delete comment by identify user from token
+// @Param commentID path string true "Comment ID" default(2)
+// @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.DeleteCommentResponse
+// @Failure 400 {object} object
+// @Router /comments/{commentID} [delete]
 func (c *commentRestHandler) DeleteComment(ctx *gin.Context) {
 	var userData entity.User
 	if value, ok := ctx.MustGet("userData").(entity.User); !ok {

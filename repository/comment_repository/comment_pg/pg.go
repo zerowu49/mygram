@@ -1,11 +1,10 @@
 package comment_pg
 
 import (
-	"fmt"
-
 	"mygram/entity"
 	"mygram/pkg/errs"
 	"mygram/repository/comment_repository"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -56,9 +55,9 @@ func (c *commentPG) GetCommentByID(commentID uint) (*entity.Comment, errs.Messag
 
 func (c *commentPG) EditCommentData(commentID uint, commentPayload *entity.Comment) (*entity.Comment, errs.MessageErr) {
 	comment := entity.Comment{}
-	fmt.Println("Melihat payload", commentPayload)
 
-	err := c.db.Model(&comment).Where("id = ?", commentID).Updates(&commentPayload).Take(&comment).Error
+	err := c.db.Raw("Update comments SET message = ?, updated_at = ? WHERE id = ? RETURNING id, message, photo_id, user_id, created_at, updated_at", commentPayload.Message, time.Now(), commentID).Take(&comment).Error
+
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errs.NewNotFoundError("Comment not found")
@@ -73,6 +72,9 @@ func (c *commentPG) DeleteComment(commentID uint) errs.MessageErr {
 	comment := entity.Comment{}
 
 	if err := c.db.Where("id = ?", commentID).Delete(&comment).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return errs.NewNotFoundError("Comment not found")
+		}
 		return errs.NewInternalServerErrorr("Something went wrong")
 	}
 

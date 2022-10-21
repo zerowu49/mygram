@@ -1,4 +1,29 @@
 definitions:
+  dto.CommentRequest:
+    properties:
+      message:
+        type: string
+      photo_id:
+        type: integer
+    type: object
+  dto.CommentResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      photo_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  dto.DeleteCommentResponse:
+    properties:
+      message:
+        type: string
+    type: object
   dto.DeletePhotoResponse:
     properties:
       message:
@@ -9,6 +34,39 @@ definitions:
       message:
         type: string
     type: object
+  dto.EditCommentRequest:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.EditCommentResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      photo_id:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  dto.EmbeddedPhotoResponse:
+    properties:
+      caption:
+        type: string
+      id:
+        type: integer
+      photo_url:
+        type: string
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
   dto.EmbeddedUserResponse:
     properties:
       email:
@@ -17,6 +75,25 @@ definitions:
         type: integer
       username:
         type: string
+    type: object
+  dto.GetCommentResponse:
+    properties:
+      Photo:
+        $ref: '#/definitions/dto.EmbeddedPhotoResponse'
+      User:
+        $ref: '#/definitions/dto.EmbeddedUserResponse'
+      created_at:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      photo_id:
+        type: integer
+      updated_at:
+        type: string
+      user_id:
+        type: integer
     type: object
   dto.GetPhotoResponse:
     properties:
@@ -133,6 +210,138 @@ definitions:
 info:
   contact: {}
 paths:
+  /comments:
+    get:
+      consumes:
+      - application/json
+      description: Get All comment by identify user from token
+      parameters:
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/dto.GetCommentResponse'
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      tags:
+      - Comment
+    post:
+      consumes:
+      - application/json
+      description: Create new comment
+      parameters:
+      - description: User Request
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CommentRequest'
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      tags:
+      - Comment
+  /comments/{commentID}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete comment by identify user from token
+      parameters:
+      - description: User Request
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EditCommentRequest'
+      - default: "2"
+        description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: string
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DeleteCommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      tags:
+      - Comment
+    put:
+      consumes:
+      - application/json
+      description: Update comment by identify user from token
+      parameters:
+      - description: User Request
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.EditCommentRequest'
+      - default: "1"
+        description: Comment ID
+        in: path
+        name: commentID
+        required: true
+        type: string
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.EditCommentResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      tags:
+      - Comment
   /photos:
     get:
       consumes:
