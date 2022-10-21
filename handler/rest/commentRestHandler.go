@@ -77,7 +77,7 @@ func (c *commentRestHandler) PostComment(ctx *gin.Context) {
 // @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
 // @Accept json
 // @Produce json
-// @Success 200 {array} []dto.GetCommentResponse
+// @Success 200 {array} dto.GetCommentResponse
 // @Failure 400 {object} object
 // @Router /comments [get]
 func (c *commentRestHandler) GetAllComments(ctx *gin.Context) {

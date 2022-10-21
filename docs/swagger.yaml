@@ -29,6 +29,11 @@ definitions:
       message:
         type: string
     type: object
+  dto.DeleteSocialMediaResponse:
+    properties:
+      message:
+        type: string
+    type: object
   dto.DeleteUserResponse:
     properties:
       message:
@@ -66,6 +71,15 @@ definitions:
         type: string
       user_id:
         type: integer
+    type: object
+  dto.EmbeddedUser:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
     type: object
   dto.EmbeddedUserResponse:
     properties:
@@ -111,6 +125,23 @@ definitions:
         type: string
       updated_at:
         type: string
+      user_id:
+        type: integer
+    type: object
+  dto.GetSocialMediaResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      social_media_url:
+        type: string
+      updated_at:
+        type: string
+      user:
+        $ref: '#/definitions/dto.EmbeddedUser'
       user_id:
         type: integer
     type: object
@@ -187,6 +218,26 @@ definitions:
       username:
         type: string
     type: object
+  dto.SocialMediaRequest:
+    properties:
+      name:
+        type: string
+      social_media_url:
+        type: string
+    type: object
+  dto.SocialMediaResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      social_media_url:
+        type: string
+      user_id:
+        type: integer
+    type: object
   dto.UpdateUserDataRequest:
     properties:
       email:
@@ -229,9 +280,7 @@ paths:
           description: OK
           schema:
             items:
-              items:
-                $ref: '#/definitions/dto.GetCommentResponse'
-              type: array
+              $ref: '#/definitions/dto.GetCommentResponse'
             type: array
         "400":
           description: Bad Request
@@ -275,12 +324,6 @@ paths:
       - application/json
       description: Delete comment by identify user from token
       parameters:
-      - description: User Request
-        in: body
-        name: RequestBody
-        required: true
-        schema:
-          $ref: '#/definitions/dto.EditCommentRequest'
       - default: "2"
         description: Comment ID
         in: path
@@ -466,6 +509,130 @@ paths:
             type: object
       tags:
       - Photos
+  /social-medias:
+    get:
+      consumes:
+      - application/json
+      description: Add social media
+      parameters:
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.GetSocialMediaResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      tags:
+      - Social Media
+    post:
+      consumes:
+      - application/json
+      description: Add social media
+      parameters:
+      - description: User Request
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SocialMediaRequest'
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.SocialMediaResponse'
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      tags:
+      - Social Media
+  /social-medias/{socmedId}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete social media data
+      parameters:
+      - default: "2"
+        description: Social Media ID
+        in: path
+        name: socmedId
+        required: true
+        type: string
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DeleteSocialMediaResponse'
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      tags:
+      - Social Media
+    put:
+      consumes:
+      - application/json
+      description: Edit social media data
+      parameters:
+      - description: User Request
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SocialMediaRequest'
+      - default: "1"
+        description: Social Media ID
+        in: path
+        name: socmedId
+        required: true
+        type: string
+      - default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y
+        description: Authorization
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SocialMediaResponse'
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      tags:
+      - Social Media
   /users:
     delete:
       consumes:

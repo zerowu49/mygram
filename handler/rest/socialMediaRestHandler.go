@@ -19,6 +19,17 @@ func NewSocialMediaRestHandler(socialMediaService service.SocialMediaService) *s
 	return &socialMediaRestHandler{socialMediaService: socialMediaService}
 }
 
+// AddSocialMedia godoc
+// @Schemes http
+// @Tags Social Media
+// @Description Add social media
+// @Param        RequestBody   body      dto.SocialMediaRequest  true  "User Request"
+// @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
+// @Accept json
+// @Produce json
+// @Success 201 {object} dto.SocialMediaResponse
+// @Failure 404 {object} object
+// @Router /social-medias [post]
 func (s *socialMediaRestHandler) AddSocialMedia(c *gin.Context) {
 	var socialMediaRequest dto.SocialMediaRequest
 	var err error
@@ -60,6 +71,16 @@ func (s *socialMediaRestHandler) AddSocialMedia(c *gin.Context) {
 	c.JSON(http.StatusCreated, socialMedia)
 }
 
+// GetAllSocialMedias godoc
+// @Schemes http
+// @Tags Social Media
+// @Description Add social media
+// @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
+// @Accept json
+// @Produce json
+// @Success 200 {array} dto.GetSocialMediaResponse
+// @Failure 404 {object} object
+// @Router /social-medias [get]
 func (s *socialMediaRestHandler) GetAllSocialMedias(c *gin.Context) {
 	var userData entity.User
 	if value, ok := c.MustGet("userData").(entity.User); !ok {
@@ -84,6 +105,18 @@ func (s *socialMediaRestHandler) GetAllSocialMedias(c *gin.Context) {
 	c.JSON(http.StatusOK, socialMedia)
 }
 
+// EditSocialMediaData godoc
+// @Schemes http
+// @Tags Social Media
+// @Description Edit social media data
+// @Param        RequestBody   body      dto.SocialMediaRequest  true  "User Request"
+// @Param socmedId path string true "Social Media ID" default(1)
+// @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.SocialMediaResponse
+// @Failure 404 {object} object
+// @Router /social-medias/{socmedId} [put]
 func (s *socialMediaRestHandler) EditSocialMediaData(c *gin.Context) {
 	var socialMediaRequest dto.SocialMediaRequest
 	var err error
@@ -134,6 +167,17 @@ func (s *socialMediaRestHandler) EditSocialMediaData(c *gin.Context) {
 	c.JSON(http.StatusOK, socialMedia)
 }
 
+// DeleteSocialMedia godoc
+// @Schemes http
+// @Tags Social Media
+// @Description Delete social media data
+// @Param socmedId path string true "Social Media ID" default(2)
+// @Param Authorization header string true "Authorization" default(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFAYS5jb20iLCJleHAiOjE2NjYzNjc3MjcsImlkIjoyfQ.T5NaUHAkGra7ehNfJ09rCLUdz9uDfjTYSbj1EtSbg5Y)
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.DeleteSocialMediaResponse
+// @Failure 404 {object} object
+// @Router /social-medias/{socmedId} [delete]
 func (s *socialMediaRestHandler) DeleteSocialMedia(c *gin.Context) {
 	var userData entity.User
 	if value, ok := c.MustGet("userData").(entity.User); !ok {
